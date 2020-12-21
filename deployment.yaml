@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: covid-web
+  namespace: covid
+spec:
+  selector:
+    matchLabels:
+      run: covid-web
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        run: covid-web
+    spec:
+      containers:
+      - name: covid-web
+        image: xgis/covid-web
+        ports:
+        - containerPort: 80
