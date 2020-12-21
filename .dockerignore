@@ -1,0 +1,9 @@
+/**/*.swp
+/**/.git/
+/**/.gitignore
+/**/.graphqlconfig
+/**/.idea/
+/**/Dockerfile
+/**/graphql_schema.json
+/**/node_modules/
+/**/wwwroot/dist/
