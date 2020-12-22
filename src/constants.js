@@ -1,4 +1,5 @@
 module.exports = {
+    chartsYLabelWidth: 80,
     graphQlEndpoint: GRAPHQL_ENDPOINT,
     ionToken: ION_TOKEN,
     logActions: false,

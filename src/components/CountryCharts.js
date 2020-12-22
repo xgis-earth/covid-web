@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import "flot-latest";
 import "flot-latest/jquery.flot.time";
 import "flot-latest/jquery.flot.resize";
+import Constants from "../constants";
 
 class CountryCharts extends React.Component {
 
@@ -117,7 +118,7 @@ class CountryCharts extends React.Component {
         const countries = this.props.countries;
         const country = countries[this.props.countryCode];
         const start = new Date('2020-01-22');
-        const labelWidth = 65;
+        const labelWidth = Constants.chartsYLabelWidth;
 
         const tickFormatter = (n) => Math.floor(n).toString()
             .replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
