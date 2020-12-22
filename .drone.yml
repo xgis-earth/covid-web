@@ -35,6 +35,3 @@ steps:
     commands:
       - kubectl -n=covid apply -f deployment.yaml
       - kubectl -n=covid patch deployment covid-web -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"
-
-clone:
-  skip_verify: true
