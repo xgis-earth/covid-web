@@ -5,6 +5,9 @@ FROM node:12.14-alpine AS build
 WORKDIR /project
 COPY . .
 RUN npm install
+ARG COVID_HASURA_DOMAIN
+ARG COVID_ION_TOKEN
+ARG COVID_MAPBOX_TOKEN
 RUN npm run build:min
 
 FROM base AS final
