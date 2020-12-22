@@ -34,7 +34,7 @@ const styles = {
     },
     contentBlanker: {
         position: "absolute",
-        top: `${Constants.headerHeight + Constants.footerHeight}px`,
+        top: `${Constants.headerHeight}px`,
         left: 0,
         margin: 0,
         padding: 0,
