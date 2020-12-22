@@ -5,6 +5,13 @@ name: default
 steps:
   - name: publish
     image: plugins/docker
+    environment:
+      COVID_HASURA_DOMAIN:
+        from_secret: covid_hasura_domain
+      COVID_ION_TOKEN:
+        from_secret: covid_ion_token
+      COVID_MAPBOX_TOKEN:
+        from_secret: covid_mapbox_token
     settings:
       repo: xgis/covid-web
       tags: [ "${DRONE_COMMIT_SHA:0:7}", "latest" ]
@@ -12,6 +19,10 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
+      build_args_from_env:
+        - COVID_HASURA_DOMAIN
+        - COVID_ION_TOKEN
+        - COVID_MAPBOX_TOKEN
   - name: deploy
     image: sinlead/drone-kubectl
     settings:
