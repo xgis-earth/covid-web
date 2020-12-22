@@ -9,10 +9,17 @@ module.exports = (env, _) => {
     const outputFile = "bundle.js";
     const mainScript = "index.js";
     const cesiumSource = "node_modules/cesium/Source";
+    const hasuraDomain = process.env.COVID_HASURA_DOMAIN;
+    const ionToken = process.env.COVID_ION_TOKEN;
+    const mapboxToken = process.env.COVID_MAPBOX_TOKEN;
 
     const plugins = [
         new webpack.DefinePlugin({
             CESIUM_BASE_URL: JSON.stringify("/dist"),
+            GRAPHQL_ENDPOINT: JSON.stringify(`https://${hasuraDomain}/v1/graphql`),
+            ION_TOKEN: JSON.stringify(ionToken),
+            MAPBOX_TOKEN: JSON.stringify(mapboxToken),
+            STAGING_ENV: JSON.stringify(isProduction ? 'prod' : 'dev'),
         }),
         new CopyPlugin([
             {
@@ -36,11 +43,11 @@ module.exports = (env, _) => {
 
     const loaders = [
         {
-            test: /\.css$/,
-            use: ["style-loader", "css-loader"],
+            test: /\.(s*)css$/,
+            use: ["style-loader", "css-loader", "sass-loader"],
         },
         {
-            test: /\.(png|gif|jpg|jpeg|svg|xml|json)$/,
+            test: /\.(png|gif|jpg|jpeg|xml|svg|woff|woff2|eot|ttf)$/,
             use: ["url-loader"],
         }
     ];

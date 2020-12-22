@@ -1,3 +1,72 @@
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/bootstrap";
+
 body {
-  font-family: "Open Sans", Verdana, Geneva, sans-serif;
+  padding-top: 60px;
+}
+
+.page-max-width {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-margin {
+  margin: 20px;
+}
+
+.center-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.form-border {
+  border: solid .2rem #f8f9fa;
+  border-radius: 4px;
+  padding: 24px;
+}
+
+.card-header h2 .btn.btn-link {
+  text-decoration: none;
+}
+
+.card-body {
+  p:last-child,
+  ul:last-child,
+  table:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cesium-viewer-bottom {
+  padding-left: 1px;
+  .cesium-widget-credits {
+    .cesium-credit-textContainer {
+      display: none !important;
+    }
+    .cesium-credit-expand-link {
+      text-shadow: none;
+    }
+  }
+}
+
+.tab-first-bootstrap-table {
+  margin-top: 1rem;
+  margin-bottom: 0;
+
+  border: 0 !important;
+
+  th {
+    border-top: 0 !important;
+  }
+
+  th,
+  td {
+    border-width: 1px 0 0 0;
+  }
 }
