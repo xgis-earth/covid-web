@@ -3,7 +3,7 @@ import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {showCountry} from "../functions";
 
-class WorldRegions extends React.Component {
+class WorldContinents extends React.Component {
 
     render() {
         if (!this.props.continents) {
@@ -61,4 +61,4 @@ const mapReduxDispatchToProps = (/*dispatch*/) => ({
 export default connect(
     mapReduxStateToProps,
     mapReduxDispatchToProps
-)(withRouter(WorldRegions));
+)(withRouter(WorldContinents));

@@ -16,7 +16,7 @@ class GlobeSidePanel extends React.Component {
     render() {
         return (
             <Switch>
-                <Route exact path="/(charts|countries|regions)?" render={() =>
+                <Route exact path="/(charts|countries|continents)?" render={() =>
                     <World/>
                 }/>
                 <Route path="/country/:code" render={({match}) =>
