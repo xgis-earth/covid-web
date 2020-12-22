@@ -7,7 +7,7 @@ class Footer extends React.Component {
         return (
             <div className="fixed-bottom" style={styles.footer}>
                 <div style={styles.copyright}>
-                    <Link to="/data">Data Sources</Link>
+                    <Link to="/data-sources">Data Sources</Link>
                     &nbsp; | &nbsp;
                     <a href="https://xgis.earth">XGIS.Earth</a>
                 </div>

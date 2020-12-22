@@ -22,7 +22,7 @@ class GlobeSidePanel extends React.Component {
                 <Route path="/country/:code" render={({match}) =>
                     <Country countryCode={match.params.code}/>
                 }/>
-                <Route exact path="/data" render={() =>
+                <Route exact path="/data-sources" render={() =>
                     <DataAttribution/>
                 }/>
                 <Route render={() => (
