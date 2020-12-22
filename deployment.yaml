@@ -19,3 +19,19 @@ spec:
         image: xgis/covid-web
         ports:
         - containerPort: 80
+          env:
+          - name: "COVID_HASURA_DOMAIN"
+            valueFrom:
+              secretKeyRef:
+                name: covid-config
+                key: hasuraDomain
+          - name: "COVID_ION_TOKEN"
+            valueFrom:
+              secretKeyRef:
+                name: covid-config
+                key: ionToken
+          - name: "COVID_MAPBOX_TOKEN"
+            valueFrom:
+              secretKeyRef:
+                name: covid-config
+                key: mapboxToken
