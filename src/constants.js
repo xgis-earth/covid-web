@@ -7,5 +7,6 @@ module.exports = {
     siteName: '2019-nCoV',
     stagingEnv: STAGING_ENV,
     titleSep: ' | ',
-    headerHeight: 60
+    headerHeight: 60,
+    footerHeight: 25
 };

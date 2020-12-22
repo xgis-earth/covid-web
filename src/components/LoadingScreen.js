@@ -34,13 +34,13 @@ const styles = {
     },
     contentBlanker: {
         position: "absolute",
-        top: `${Constants.headerHeight}px`,
+        top: `${Constants.headerHeight + Constants.footerHeight}px`,
         left: 0,
         margin: 0,
         padding: 0,
         zIndex: 99999,
         width: "100vw",
-        height: `calc(100vh - ${Constants.headerHeight}px)`,
+        height: `calc(100vh - ${Constants.headerHeight + Constants.footerHeight}px)`,
         backgroundColor: "#FFF",
         opacity: 0.9,
         display: "none"

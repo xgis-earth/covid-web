@@ -47,11 +47,11 @@ const styles = {
     },
     defaultGlobe: {
         userSelect: 'none',
-        height: `calc(100vh - ${Constants.headerHeight}px)`,
+        height: `calc(100vh - ${Constants.headerHeight + Constants.footerHeight}px)`,
         borderRight: 'solid 1px #dee2e6'
     },
     defaultTabs: {
-        height: `calc(100vh - ${Constants.headerHeight}px)`,
+        height: `calc(100vh - ${Constants.headerHeight + Constants.footerHeight}px)`,
         overflow: 'auto'
     }
 };

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import {Route, Switch, withRouter} from "react-router-dom";
 import Country from "./Country";
 import World from "./World";
+import DataAttribution from "./DataAttribution";
 import NotFound from "./NotFound";
 
 class GlobeSidePanel extends React.Component {
@@ -15,11 +16,14 @@ class GlobeSidePanel extends React.Component {
     render() {
         return (
             <Switch>
+                <Route exact path="/(charts|countries|regions)?" render={() =>
+                    <World/>
+                }/>
                 <Route path="/country/:code" render={({match}) =>
                     <Country countryCode={match.params.code}/>
                 }/>
-                <Route path="/" render={() =>
-                    <World/>
+                <Route exact path="/data" render={() =>
+                    <DataAttribution/>
                 }/>
                 <Route render={() => (
                     <NotFound/>
