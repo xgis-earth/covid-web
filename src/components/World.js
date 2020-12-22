@@ -3,8 +3,8 @@ import {connect} from "react-redux";
 import {Switch, Route, Link, matchPath, withRouter} from "react-router-dom";
 import {setSelectedEntity} from "../redux/actions/globe";
 import WorldSummary from "./WorldSummary";
+import WorldRegions from "./WorldRegions";
 import WorldCountries from "./WorldCountries";
-import WorldCovidTable from "./WorldCovidTable";
 import WorldCharts from "./WorldCharts";
 import NotFound from "./NotFound";
 
@@ -65,9 +65,9 @@ class World extends React.Component {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="/table"
-                              className={getClasses('table')}>
-                            Table
+                        <Link to="/regions"
+                              className={getClasses('regions')}>
+                            Regions
                         </Link>
                     </li>
                 </ul>
@@ -81,8 +81,8 @@ class World extends React.Component {
                     <Route exact path="/countries" render={() =>
                         <WorldCountries/>
                     }/>
-                    <Route exact path="/table" render={() =>
-                        <WorldCovidTable/>
+                    <Route exact path="/regions" render={() =>
+                        <WorldRegions/>
                     }/>
                     <Route render={() => (
                         <NotFound/>
