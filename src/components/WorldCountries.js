@@ -19,8 +19,9 @@ class WorldCountries extends React.Component {
             const country = this.props.countries[code];
             if (country.additionalData) {
                 const name = country.additionalData.name;
-                const deaths = country.additionalData['covid_deaths'];
-                const cases = country.additionalData['covid_confirmed'];
+                const deaths = country.additionalData['covid_deaths'] || 0;
+                const cases = country.additionalData['covid_confirmed'] || 0;
+                if (deaths === 0 && cases === 0) continue; // Don't show rows with no data.
                 tableData.push({code, name, deaths, cases});
             }
         }
