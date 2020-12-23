@@ -21,8 +21,6 @@ class WorldCountries extends React.Component {
                 const name = country.additionalData.name;
                 const deaths = country.additionalData['covid_deaths'];
                 const cases = country.additionalData['covid_confirmed'];
-                const recovered = country.additionalData['covid_recovered'];
-                if (!deaths || !cases || !recovered) continue;
                 tableData.push({code, name, deaths, cases});
             }
         }
