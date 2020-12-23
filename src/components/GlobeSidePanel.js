@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import {Route, Switch, withRouter} from "react-router-dom";
 import Country from "./Country";
 import World from "./World";
-import DataAttribution from "./DataAttribution";
+import DataSources from "./DataSources";
 import NotFound from "./NotFound";
 
 class GlobeSidePanel extends React.Component {
@@ -23,7 +23,7 @@ class GlobeSidePanel extends React.Component {
                     <Country countryCode={match.params.code}/>
                 }/>
                 <Route exact path="/data-sources" render={() =>
-                    <DataAttribution/>
+                    <DataSources/>
                 }/>
                 <Route render={() => (
                     <NotFound/>
