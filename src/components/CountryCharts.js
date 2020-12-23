@@ -32,14 +32,14 @@ class CountryCharts extends React.Component {
         let recovered = parseInt(country.additionalData['covid_recovered']);
         let tests = parseInt(country.additionalData['covid_tests']);
 
-        cases = isNaN(cases) ? undefined : cases;
-        deaths = isNaN(deaths) ? undefined : deaths;
-        recovered = isNaN(recovered) ? undefined : recovered;
-        tests = isNaN(tests) ? undefined : tests;
+        cases = isNaN(cases) ? 0 : cases;
+        deaths = isNaN(deaths) ? 0 : deaths;
+        recovered = isNaN(recovered) ? 0 : recovered;
+        tests = isNaN(tests) ? 0 : tests;
 
         return (
             <React.Fragment>
-                {cases && cases > 0 &&
+                {cases > 0 &&
                 <div className="card" style={{marginTop: "1rem"}}>
                     <div className="card-header">
                         Cases
@@ -51,7 +51,7 @@ class CountryCharts extends React.Component {
                     </div>
                 </div>
                 }
-                {deaths && deaths > 0 &&
+                {deaths > 0 &&
                 <React.Fragment>
                     <div className="card" style={{marginTop: "1rem"}}>
                         <div className="card-header">
@@ -76,7 +76,7 @@ class CountryCharts extends React.Component {
                     </div>
                 </React.Fragment>
                 }
-                {recovered && recovered > 0 &&
+                {recovered > 0 &&
                 <div className="card" style={{marginTop: "1rem"}}>
                     <div className="card-header">
                         Recovered
@@ -88,7 +88,7 @@ class CountryCharts extends React.Component {
                     </div>
                 </div>
                 }
-                {tests && tests > 0 &&
+                {tests > 0 &&
                 <div className="card" style={{marginTop: "1rem"}}>
                     <div className="card-header">
                         Tests
