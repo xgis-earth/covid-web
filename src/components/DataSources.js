@@ -34,6 +34,17 @@ class DataSources extends React.Component {
                         </a>
                     </div>
                 </div>
+                <div className="card mt-3">
+                    <div className="card-body">
+                        <h5 className="card-title">Mediastack News API</h5>
+                        <p className="card-text">
+                            The mediastack API provides a REST API for real-time and historical news data.
+                        </p>
+                        <a href="https://mediastack.com" className="btn btn-primary">
+                            Go to mediastack.com
+                        </a>
+                    </div>
+                </div>
             </div>
         )
     }

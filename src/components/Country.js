@@ -5,8 +5,9 @@ import {Switch, Route, Link, matchPath, withRouter} from "react-router-dom";
 import {setInitialEntity} from "../redux/actions/globe";
 import {getCountryEntity, showCountry} from "../functions";
 import CountrySummary from "./CountrySummary";
+import CountryCharts from "./CountryCharts";
+import CountryNews from "./CountryNews";
 import NotFound from "./NotFound";
-import CountryCovid19Charts from "./CountryCharts";
 
 class Country extends React.Component {
 
@@ -91,13 +92,34 @@ class Country extends React.Component {
                             Charts
                         </Link>
                     </li>
+                    <li className="nav-item">
+                        <Link to={`/country/${this.props.countryCode}/news`}
+                              className={getClasses('news')}>
+                            News
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link to={`/country/${this.props.countryCode}/travel`}
+                              className={getClasses('travel')}>
+                            Travel
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link to={`/country/${this.props.countryCode}/government-measures`}
+                              className={getClasses('government-measures')}>
+                            Government Measures
+                        </Link>
+                    </li>
                 </ul>
                 <Switch>
-                    <Route exact path="/country/:code/charts" render={({match}) =>
-                        <CountryCovid19Charts countryCode={match.params.code}/>
-                    }/>
                     <Route exact path="/country/:code" render={({match}) =>
                         <CountrySummary countryCode={match.params.code}/>
+                    }/>
+                    <Route exact path="/country/:code/charts" render={({match}) =>
+                        <CountryCharts countryCode={match.params.code}/>
+                    }/>
+                    <Route exact path="/country/:code/news" render={({match}) =>
+                        <CountryNews countryCode={match.params.code}/>
                     }/>
                     <Route render={() => (
                         <NotFound/>
