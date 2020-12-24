@@ -98,8 +98,8 @@ class CountryNews extends React.Component {
         this.setState({fetchingNews: true});
 
         const query = gql`
-            query ($country_code: String!) {
-                country_news(country_code: $country_code) {
+            query ($country_code: String!, $limit: Int!) {
+                country_news(country_code: $country_code, limit: $limit) {
                     title
                     description
                     image_url
@@ -111,18 +111,21 @@ class CountryNews extends React.Component {
         `;
 
         const variables = {
-            country_code: this.props.countryCode
+            country_code: this.props.countryCode,
+            limit: 25
         };
 
         try {
             fetch(query, variables).then(response => {
-                this.setState({articles: response.data.country_news});
+                this.setState({
+                    articles: response.data.country_news,
+                    fetchingNews: false
+                });
             })
         } catch (e) {
             hideLoading();
-            console.error(e);
-        } finally {
             this.setState({fetchingNews: false});
+            console.error(e);
         }
     }
 }
