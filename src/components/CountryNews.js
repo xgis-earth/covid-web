@@ -13,12 +13,12 @@ class CountryNews extends React.Component {
     };
 
     state = {
-        fetchingNews: false,
+        fetching: false,
         articles: undefined
     };
 
     render() {
-        if (this.state.fetchingNews) {
+        if (this.state.fetching) {
             return <Spinner/>
         }
 
@@ -117,8 +117,9 @@ class CountryNews extends React.Component {
 
         try {
             fetch(query, variables).then(response => {
+                console.assert(response && response.data && response.data.country_news, response);
                 this.setState({
-                    articles: response.data.country_news,
+                    articles: response && response.data && response.data.country_news || [],
                     fetchingNews: false
                 });
             })
