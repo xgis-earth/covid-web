@@ -95,7 +95,7 @@ class CountryNews extends React.Component {
     }
 
     getNews() {
-        this.setState({fetchingNews: true});
+        this.setState({fetching: true});
 
         const query = gql`
             query ($country_code: String!, $limit: Int!) {
@@ -120,12 +120,12 @@ class CountryNews extends React.Component {
                 console.assert(response && response.data && response.data.country_news, response);
                 this.setState({
                     articles: response && response.data && response.data.country_news || [],
-                    fetchingNews: false
+                    fetching: false
                 });
             })
         } catch (e) {
             hideLoading();
-            this.setState({fetchingNews: false});
+            this.setState({fetching: false});
             console.error(e);
         }
     }
