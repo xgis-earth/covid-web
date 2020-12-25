@@ -8,6 +8,7 @@ import CountrySummary from "./CountrySummary";
 import CountryCharts from "./CountryCharts";
 import CountryNews from "./CountryNews";
 import NotFound from "./NotFound";
+import CountryTravelInfo from "./CountryTravelInfo";
 
 class Country extends React.Component {
 
@@ -104,12 +105,14 @@ class Country extends React.Component {
                             Travel
                         </Link>
                     </li>
+{/*
                     <li className="nav-item">
                         <Link to={`/country/${this.props.countryCode}/government-measures`}
                               className={getClasses('government-measures')}>
                             Government Measures
                         </Link>
                     </li>
+*/}
                 </ul>
                 <Switch>
                     <Route exact path="/country/:code" render={({match}) =>
@@ -120,6 +123,9 @@ class Country extends React.Component {
                     }/>
                     <Route exact path="/country/:code/news" render={({match}) =>
                         <CountryNews countryCode={match.params.code}/>
+                    }/>
+                    <Route exact path="/country/:code/travel" render={({match}) =>
+                        <CountryTravelInfo countryCode={match.params.code}/>
                     }/>
                     <Route render={() => (
                         <NotFound/>

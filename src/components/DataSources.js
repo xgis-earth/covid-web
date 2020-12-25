@@ -45,6 +45,18 @@ class DataSources extends React.Component {
                         </a>
                     </div>
                 </div>
+                <div className="card mt-3">
+                    <div className="card-body">
+                        <h5 className="card-title">COVID-19 Global Travel Restrictions and Airline Information</h5>
+                        <p className="card-text">
+                            Current travel & airline restrictions. Information is collected from various sources: IATA,
+                            media, national sources, WFP internal or any other.
+                        </p>
+                        <a href="https://data.humdata.org/dataset/covid-19-global-travel-restrictions-and-airline-information" className="btn btn-primary">
+                            Go to HDX (Humanitarian Data Exchange)
+                        </a>
+                    </div>
+                </div>
             </div>
         )
     }
