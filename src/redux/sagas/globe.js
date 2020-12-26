@@ -51,6 +51,7 @@ function* handleGetGlobeData(action) {
                 covid_confirmed
                 covid_deaths
                 covid_recovered
+                population_time_series
                 covid_confirmed_time_series
                 covid_deaths_time_series
                 covid_recovered_time_series
