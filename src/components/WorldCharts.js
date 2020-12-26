@@ -1,9 +1,12 @@
 import $ from "jquery";
 import React from "react";
-import {connect} from "react-redux";
 import "flot-latest";
 import "flot-latest/jquery.flot.time";
 import "flot-latest/jquery.flot.resize";
+import gql from "graphql-tag";
+import Spinner from "./Spinner";
+import {fetch} from "../graphql_fetch";
+import {hideLoading} from "../functions";
 import Constants from "../constants";
 
 class WorldCharts extends React.Component {
@@ -14,61 +17,66 @@ class WorldCharts extends React.Component {
     recoveredChartRef = React.createRef();
     populationChartRef = React.createRef();
 
-    render() {
-        if (!this.props.worldInfo) {
-            return <React.Fragment/>
-        }
+    state = {
+        fetching: false
+    };
 
+    render() {
         return (
             <React.Fragment>
-                <div className="card" style={{marginTop: "1rem"}}>
-                    <div className="card-header">
-                        Cases
+                {this.state.fetching &&
+                <Spinner/>
+                }
+                <div style={{display: this.state.fetching ? 'none' : ''}}>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Cases
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.casesChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
                     </div>
-                    <div className="card-body">
-                        <div ref={this.casesChartRef}
-                             className="timeline-chart"
-                             style={styles.chart}/>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Deaths
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.deathsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
                     </div>
-                </div>
-                <div className="card" style={{marginTop: "1rem"}}>
-                    <div className="card-header">
-                        Deaths
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Deaths (daily totals)
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.dailyDeathsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
                     </div>
-                    <div className="card-body">
-                        <div ref={this.deathsChartRef}
-                             className="timeline-chart"
-                             style={styles.chart}/>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Recovered
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.recoveredChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
                     </div>
-                </div>
-                <div className="card" style={{marginTop: "1rem"}}>
-                    <div className="card-header">
-                        Deaths (daily totals)
-                    </div>
-                    <div className="card-body">
-                        <div ref={this.dailyDeathsChartRef}
-                             className="timeline-chart"
-                             style={styles.chart}/>
-                    </div>
-                </div>
-                <div className="card" style={{marginTop: "1rem"}}>
-                    <div className="card-header">
-                        Recovered
-                    </div>
-                    <div className="card-body">
-                        <div ref={this.recoveredChartRef}
-                             className="timeline-chart"
-                             style={styles.chart}/>
-                    </div>
-                </div>
-                <div className="card" style={{marginTop: "1rem"}}>
-                    <div className="card-header">
-                        Population
-                    </div>
-                    <div className="card-body">
-                        <div ref={this.populationChartRef}
-                             className="timeline-chart"
-                             style={styles.chart}/>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Population
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.populationChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
                     </div>
                 </div>
             </React.Fragment>
@@ -76,13 +84,73 @@ class WorldCharts extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.worldInfo) {
-            this.renderCharts(this.props.worldInfo);
+        this.getCharts();
+    }
+
+    getCharts() {
+        this.setState({fetching: true});
+
+        const query = gql`
+            query {
+                region(where: {name: {_eq: "World"}}) {
+                    population_time_series
+                    covid_confirmed_time_series
+                    covid_deaths_time_series
+                    covid_recovered_time_series
+                }
+            }
+        `;
+
+        const variables = {};
+
+        try {
+            fetch(query, variables).then(response => {
+                console.assert(response && response.data && response.data.region, response);
+                this.setState({fetching: false});
+                this.renderCharts(response.data.region[0]);
+            })
+        } catch (e) {
+            hideLoading();
+            this.setState({fetching: false});
+            console.error(e);
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        this.renderCharts(this.props.worldInfo);
+    renderCharts(data) {
+        const start = new Date('2020-01-22');
+        const timeFormat = '%d %b';
+        const labelWidth = Constants.chartsYLabelWidth;
+        const deathsTimeSeries = JSON.parse(data['covid_deaths_time_series'])
+        this.renderConfirmedChart(JSON.parse(data['covid_confirmed_time_series']), start, timeFormat, labelWidth);
+        this.renderDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
+        this.renderDailyDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
+        this.renderRecoveredChart(JSON.parse(data['covid_recovered_time_series']), start, timeFormat, labelWidth);
+        this.renderPopulationChart(JSON.parse(data['population_time_series']), new Date('1960'), '%Y', labelWidth);
+    }
+
+    renderConfirmedChart(timeSeries, start, timeFormat, labelWidth) {
+        const chart = $(this.casesChartRef.current);
+        this.renderChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Cases');
+    }
+
+    renderDeathsChart(timeSeries, start, timeFormat, labelWidth) {
+        const chart = $(this.deathsChartRef.current);
+        this.renderChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Deaths');
+    }
+
+    renderDailyDeathsChart(timeSeries, start, timeFormat, labelWidth) {
+        const chart = $(this.dailyDeathsChartRef.current);
+        this.renderBarChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Daily Death Totals');
+    }
+
+    renderRecoveredChart(timeSeries, start, timeFormat, labelWidth) {
+        const chart = $(this.recoveredChartRef.current);
+        this.renderChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Recovered');
+    }
+
+    renderPopulationChart(timeSeries, start, timeFormat, labelWidth) {
+        const chart = $(this.populationChartRef.current);
+        this.renderChart(start, undefined, addYears, timeFormat, labelWidth, timeSeries, chart, 'Population');
     }
 
     renderChart(start, min, timeIncrement, timeFormat, labelWidth, timeSeries, chart, title) {
@@ -152,47 +220,6 @@ class WorldCharts extends React.Component {
             }
         });
     }
-
-    renderConfirmedChart(data, start, timeFormat, labelWidth) {
-        const timeSeries = JSON.parse(data['covid_confirmed_time_series']);
-        const chart = $(this.casesChartRef.current);
-        this.renderChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Cases');
-    }
-
-    renderDeathsChart(data, start, timeFormat, labelWidth) {
-        const timeSeries = JSON.parse(data['covid_deaths_time_series']);
-        const chart = $(this.deathsChartRef.current);
-        this.renderChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Deaths');
-    }
-
-    renderDailyDeathsChart(data, start, timeFormat, labelWidth) {
-        const timeSeries = JSON.parse(data['covid_deaths_time_series']);
-        const chart = $(this.dailyDeathsChartRef.current);
-        this.renderBarChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Daily Death Totals');
-    }
-
-    renderRecoveredChart(data, start, timeFormat, labelWidth) {
-        const timeSeries = JSON.parse(data['covid_recovered_time_series']);
-        const chart = $(this.recoveredChartRef.current);
-        this.renderChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Recovered');
-    }
-
-    renderPopulationChart(data, start, timeFormat, labelWidth) {
-        const timeSeries = JSON.parse(data['population_time_series']);
-        const chart = $(this.populationChartRef.current);
-        this.renderChart(start, undefined, addYears, timeFormat, labelWidth, timeSeries, chart, 'Population');
-    }
-
-    renderCharts(data) {
-        const start = new Date('2020-01-22');
-        const timeFormat = '%d %b';
-        const labelWidth = Constants.chartsYLabelWidth;
-        this.renderConfirmedChart(data, start, timeFormat, labelWidth);
-        this.renderDeathsChart(data, start, timeFormat, labelWidth);
-        this.renderDailyDeathsChart(data, start, timeFormat, labelWidth);
-        this.renderRecoveredChart(data, start, timeFormat, labelWidth);
-        this.renderPopulationChart(data, new Date('1960'), '%Y', labelWidth);
-    }
 }
 
 function addDays(date, days) {
@@ -218,15 +245,4 @@ const styles = {
     }
 };
 
-const mapReduxStateToProps = (state) => ({
-    worldInfo: state.globe.worldInfo,
-});
-
-const mapReduxDispatchToProps = (/*dispatch*/) => ({
-    // Not used
-});
-
-export default connect(
-    mapReduxStateToProps,
-    mapReduxDispatchToProps
-)(WorldCharts);
+export default WorldCharts;
