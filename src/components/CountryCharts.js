@@ -5,6 +5,19 @@ import {connect} from "react-redux";
 import "flot-latest";
 import "flot-latest/jquery.flot.time";
 import "flot-latest/jquery.flot.resize";
+import gql from "graphql-tag";
+import Spinner from "./Spinner";
+import {fetch} from "../graphql_fetch";
+import {
+    addDays,
+    addYears,
+    getBarPlot,
+    getPlot,
+    getPlotFromTimestampedSeries,
+    hideLoading,
+    renderBarChart,
+    renderChart,
+} from "../functions";
 import Constants from "../constants";
 
 class CountryCharts extends React.Component {
@@ -18,6 +31,11 @@ class CountryCharts extends React.Component {
     dailyDeathsChartRef = React.createRef();
     recoveredChartRef = React.createRef();
     testsChartRef = React.createRef();
+    populationChartRef = React.createRef();
+
+    state = {
+        fetching: false
+    };
 
     render() {
         if (!this.props.countries[this.props.countryCode].additionalData) {
@@ -31,289 +49,198 @@ class CountryCharts extends React.Component {
         let deaths = parseInt(country.additionalData['covid_deaths']);
         let recovered = parseInt(country.additionalData['covid_recovered']);
         let tests = parseInt(country.additionalData['covid_tests']);
+        let population = parseInt(country.additionalData['population']);
 
         cases = isNaN(cases) ? 0 : cases;
         deaths = isNaN(deaths) ? 0 : deaths;
         recovered = isNaN(recovered) ? 0 : recovered;
         tests = isNaN(tests) ? 0 : tests;
+        population = isNaN(population) ? 0 : population;
 
         return (
             <React.Fragment>
-                {cases > 0 &&
-                <div className="card" style={{marginTop: "1rem"}}>
-                    <div className="card-header">
-                        Cases
-                    </div>
-                    <div className="card-body">
-                        <div ref={this.casesChartRef}
-                             className="timeline-chart"
-                             style={styles.chart}/>
-                    </div>
-                </div>
+                {this.state.fetching &&
+                <Spinner/>
                 }
-                {deaths > 0 &&
-                <React.Fragment>
+                <div style={{display: this.state.fetching ? 'none' : ''}}>
+                    {cases > 0 &&
                     <div className="card" style={{marginTop: "1rem"}}>
                         <div className="card-header">
-                            Deaths
+                            Cases
                         </div>
                         <div className="card-body">
-                            <div ref={this.deathsChartRef}
+                            <div ref={this.casesChartRef}
                                  className="timeline-chart"
                                  style={styles.chart}/>
                         </div>
                     </div>
+                    }
+                    {deaths > 0 &&
+                    <React.Fragment>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Deaths
+                            </div>
+                            <div className="card-body">
+                                <div ref={this.deathsChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
+                            </div>
+                        </div>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Deaths (daily totals)
+                            </div>
+                            <div className="card-body">
+                                <div ref={this.dailyDeathsChartRef}
+                                     id="daily-deaths-timeline-chart"
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
+                            </div>
+                        </div>
+                    </React.Fragment>
+                    }
+                    {recovered > 0 &&
                     <div className="card" style={{marginTop: "1rem"}}>
                         <div className="card-header">
-                            Deaths (daily totals)
+                            Recovered
                         </div>
                         <div className="card-body">
-                            <div ref={this.dailyDeathsChartRef}
-                                 id="daily-deaths-timeline-chart"
+                            <div ref={this.recoveredChartRef}
                                  className="timeline-chart"
                                  style={styles.chart}/>
                         </div>
                     </div>
-                </React.Fragment>
-                }
-                {recovered > 0 &&
-                <div className="card" style={{marginTop: "1rem"}}>
-                    <div className="card-header">
-                        Recovered
+                    }
+                    {tests > 0 &&
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Tests
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.testsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
                     </div>
-                    <div className="card-body">
-                        <div ref={this.recoveredChartRef}
-                             className="timeline-chart"
-                             style={styles.chart}/>
+                    }
+                    {population > 0 &&
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Population
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.populationChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
                     </div>
+                    }
                 </div>
-                }
-                {tests > 0 &&
-                <div className="card" style={{marginTop: "1rem"}}>
-                    <div className="card-header">
-                        Tests
-                    </div>
-                    <div className="card-body">
-                        <div ref={this.testsChartRef}
-                             className="timeline-chart"
-                             style={styles.chart}/>
-                    </div>
-                </div>
-                }
             </React.Fragment>
         )
     }
 
     componentDidMount() {
-        this.updateChart();
+        this.getCharts();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.countryCode !== prevProps.countryCode) {
-            this.updateChart();
+            this.getCharts();
         }
     }
 
-    updateChart() {
-        const countries = this.props.countries;
-        const country = countries[this.props.countryCode];
-        const start = new Date('2020-01-22');
-        const labelWidth = Constants.chartsYLabelWidth;
+    getCharts() {
+        this.setState({fetching: true});
 
-        const tickFormatter = (n) => Math.floor(n).toString()
-            .replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
+        const query = gql`
+            query ($country_code: String!) {
+                country(where: {iso_alpha2: {_eq: $country_code}}) {
+                    population_time_series
+                    covid_confirmed_time_series
+                    covid_deaths_time_series
+                    covid_recovered_time_series
+                    covid_tests_time_series
+                }
+            }
+        `;
 
-        const addDays = (date, days) => {
-            const result = new Date(date);
-            result.setDate(result.getDate() + days);
-            return result;
+        const variables = {
+            country_code: this.props.countryCode
         };
 
-        let days;
+        try {
+            fetch(query, variables).then(response => {
+                console.assert(response && response.data && response.data.country, response);
+                this.setState({fetching: false});
+                this.renderCharts(response.data.country[0]);
+            })
+        } catch (e) {
+            hideLoading();
+            this.setState({fetching: false});
+            console.error(e);
+        }
+    }
 
+    renderCharts(data) {
+        const start = new Date('2020-01-22');
+        const timeFormat = '%d %b';
+        const labelWidth = Constants.chartsYLabelWidth;
+        const deathsTimeSeries = JSON.parse(data['covid_deaths_time_series'])
+        this.renderConfirmedChart(JSON.parse(data['covid_confirmed_time_series']), start, timeFormat, labelWidth);
+        this.renderDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
+        this.renderDailyDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
+        this.renderRecoveredChart(JSON.parse(data['covid_recovered_time_series']), start, timeFormat, labelWidth);
+        this.renderTestsChart(JSON.parse(data['covid_tests_time_series']), timeFormat, labelWidth);
+        this.renderPopulationChart(JSON.parse(data['population_time_series']), new Date('1960'), '%Y', labelWidth);
+    }
+
+    renderConfirmedChart(timeSeries, start, timeFormat, labelWidth) {
         if (this.casesChartRef.current) {
-            const timeSeries = JSON.parse(country.additionalData['covid_confirmed_time_series']);
             const chart = $(this.casesChartRef.current);
-            days = timeSeries.length;
-
-            const plot = [];
-            for (let i = 0; i < days; i++) {
-                const date = addDays(start, i);
-                plot.push([date, timeSeries[i]]);
-            }
-
-            $.plot(chart, [{
-                label: 'Cases',
-                data: plot
-            }], {
-                legend: {
-                    show: false
-                },
-                grid: {
-                    // clickable: true
-                },
-                yaxis: {
-                    labelWidth,
-                    min: 0,
-                    tickDecimals: 0,
-                    tickFormatter
-                },
-                xaxis: {
-                    mode: 'time',
-                    timeformat: '%d %b'
-                }
-            });
+            const plot = getPlot(start, timeSeries, addDays);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Cases');
         }
+    }
 
+    renderDeathsChart(timeSeries, start, timeFormat, labelWidth) {
         if (this.deathsChartRef.current) {
-            const timeSeries = JSON.parse(country.additionalData['covid_deaths_time_series']);
             const chart = $(this.deathsChartRef.current);
-            days = timeSeries.length;
-
-            const deaths = [];
-            for (let i = 0; i < days; i++) {
-                const date = addDays(start, i);
-                deaths.push([date, timeSeries[i]]);
-            }
-
-            $.plot(chart, [{
-                label: 'Deaths',
-                data: deaths
-            }], {
-                legend: {
-                    show: false
-                },
-                grid: {
-                    // clickable: true
-                },
-                yaxis: {
-                    labelWidth,
-                    min: 0,
-                    tickDecimals: 0,
-                    tickFormatter
-                },
-                xaxis: {
-                    mode: 'time',
-                    timeformat: '%d %b'
-                }
-            });
+            const plot = getPlot(start, timeSeries, addDays);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Deaths');
         }
+    }
 
+    renderDailyDeathsChart(timeSeries, start, timeFormat, labelWidth) {
         if (this.dailyDeathsChartRef.current) {
-            const timeSeries = JSON.parse(country.additionalData['covid_deaths_time_series']);
             const chart = $(this.dailyDeathsChartRef.current);
-            days = timeSeries.length;
-
-            const deathsPlot = [];
-            let maxDeaths = 0;
-            let prevTotal = 0;
-            for (let i = 0; i < days; i++) {
-                const date = addDays(start, i);
-                const today = timeSeries[i] - prevTotal;
-                deathsPlot.push([date, today]);
-
-                if (today > maxDeaths) maxDeaths = today;
-                prevTotal = timeSeries[i];
-            }
-
-            $.plot(chart, [{
-                label: 'Daily Death Totals',
-                data: deathsPlot,
-                bars: {
-                    show: true,
-                    fill: true,
-                }
-            }], {
-                legend: {
-                    show: false
-                },
-                grid: {
-                    // hoverable: true,
-                    // clickable: true
-                },
-                bars: {
-                    barWidth: 24 * 60 * 60 * 600,
-                },
-                yaxis: {
-                    labelWidth,
-                    min: 0,
-                    tickDecimals: 0,
-                    tickFormatter
-                },
-                xaxis: {
-                    mode: 'time',
-                    timeformat: '%d %b'
-                }
-            });
+            const plot = getBarPlot(start, timeSeries, addDays);
+            renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Daily Death Totals');
         }
+    }
 
+    renderRecoveredChart(timeSeries, start, timeFormat, labelWidth) {
         if (this.recoveredChartRef.current) {
-            const timeSeries = JSON.parse(country.additionalData['covid_recovered_time_series']);
             const chart = $(this.recoveredChartRef.current);
-            days = timeSeries.length;
-
-            const plot = [];
-            for (let i = 0; i < days; i++) {
-                const date = addDays(start, i);
-                plot.push([date, timeSeries[i]]);
-            }
-
-            $.plot(chart, [{
-                label: 'Recovered',
-                data: plot
-            }], {
-                legend: {
-                    show: false
-                },
-                grid: {
-                    // clickable: true
-                },
-                yaxis: {
-                    labelWidth,
-                    min: 0,
-                    tickDecimals: 0,
-                    tickFormatter
-                },
-                xaxis: {
-                    mode: 'time',
-                    timeformat: '%d %b'
-                }
-            });
+            const plot = getPlot(start, timeSeries, addDays);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Recovered');
         }
+    }
 
+    renderTestsChart(timeSeries, timeFormat, labelWidth) {
         if (this.testsChartRef.current) {
-            const timeSeries = JSON.parse(country.additionalData['covid_tests_time_series']);
             const chart = $(this.testsChartRef.current);
+            const plot = getPlotFromTimestampedSeries(timeSeries);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Tests');
+        }
+    }
 
-            const plot = [];
-            for (let i = 0; i < timeSeries.length; i++) {
-                const entry = timeSeries[i];
-                plot.push([new Date(entry.date), entry.count]);
-            }
-
-            $.plot(chart, [{
-                label: 'Tests',
-                data: plot
-            }], {
-                legend: {
-                    show: false
-                },
-                grid: {
-                    // clickable: true
-                },
-                yaxis: {
-                    labelWidth,
-                    min: 0,
-                    tickDecimals: 0,
-                    tickFormatter
-                },
-                xaxis: {
-                    mode: 'time',
-                    timeformat: '%d %b',
-                    min: start,
-                    max: (days ? addDays(start, days - 1) : undefined)
-                }
-            });
+    renderPopulationChart(timeSeries, start, timeFormat, labelWidth) {
+        if (this.populationChartRef.current) {
+            const chart = $(this.populationChartRef.current);
+            const plot = getPlot(start, timeSeries, addYears);
+            renderChart(undefined, plot, timeFormat, labelWidth, timeSeries, chart, 'Population');
         }
     }
 }

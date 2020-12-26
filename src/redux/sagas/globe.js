@@ -1,9 +1,9 @@
 import {takeLatest, select, put} from "redux-saga/effects";
 import axios from "axios";
 import gql from "graphql-tag/lib/graphql-tag.umd";
-import {print} from "graphql";
 import {GeoJsonDataSource, Color} from "cesium";
 import {showLoading, hideLoading, showEntityAsync} from "../../functions";
+import {fetch} from "../../graphql_fetch";
 import {
     actionTypes,
     setCountriesGeo,
@@ -11,7 +11,6 @@ import {
     setSelectedEntity,
     setWorldInfo,
 } from "../actions/globe";
-import Constants from "../../constants";
 
 // -----------------------------------------------------------------------------
 // Action watchers
@@ -64,19 +63,15 @@ function* handleGetGlobeData(action) {
                 covid_deaths
                 covid_recovered
                 covid_tests
-                covid_confirmed_time_series
-                covid_deaths_time_series
-                covid_recovered_time_series
-                covid_tests_time_series
             }
         }`;
 
-        const response = yield axios.post(Constants.graphQlEndpoint, {query: print(query)});
+        const response = yield fetch(query, {});
 
-        const worldInfo = response.data.data.region[0];
+        const worldInfo = response.data.region[0];
         yield put(setWorldInfo(worldInfo, action.cesiumRef));
 
-        const countriesInfo = response.data.data.country;
+        const countriesInfo = response.data.country;
 
         // Update geojson with some additional country data.
         for (let i = 0; i < countriesInfo.length; i++) {

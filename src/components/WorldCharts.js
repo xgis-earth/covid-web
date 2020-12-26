@@ -6,7 +6,15 @@ import "flot-latest/jquery.flot.resize";
 import gql from "graphql-tag";
 import Spinner from "./Spinner";
 import {fetch} from "../graphql_fetch";
-import {hideLoading} from "../functions";
+import {
+    addDays,
+    addYears,
+    getBarPlot,
+    getPlot,
+    hideLoading,
+    renderBarChart,
+    renderChart,
+} from "../functions";
 import Constants from "../constants";
 
 class WorldCharts extends React.Component {
@@ -130,112 +138,33 @@ class WorldCharts extends React.Component {
 
     renderConfirmedChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.casesChartRef.current);
-        this.renderChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Cases');
+        const plot = getPlot(start, timeSeries, addDays);
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Cases');
     }
 
     renderDeathsChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.deathsChartRef.current);
-        this.renderChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Deaths');
+        const plot = getPlot(start, timeSeries, addDays);
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Deaths');
     }
 
     renderDailyDeathsChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.dailyDeathsChartRef.current);
-        this.renderBarChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Daily Death Totals');
+        const plot = getBarPlot(start, timeSeries, addDays);
+        renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Daily Death Totals');
     }
 
     renderRecoveredChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.recoveredChartRef.current);
-        this.renderChart(start, 0, addDays, timeFormat, labelWidth, timeSeries, chart, 'Recovered');
+        const plot = getPlot(start, timeSeries, addDays);
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Recovered');
     }
 
     renderPopulationChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.populationChartRef.current);
-        this.renderChart(start, undefined, addYears, timeFormat, labelWidth, timeSeries, chart, 'Population');
+        const plot = getPlot(start, timeSeries, addYears);
+        renderChart(undefined, plot, timeFormat, labelWidth, timeSeries, chart, 'Population');
     }
-
-    renderChart(start, min, timeIncrement, timeFormat, labelWidth, timeSeries, chart, title) {
-        const len = timeSeries.length;
-
-        const plot = [];
-        for (let i = 0; i < len; i++) {
-            const date = timeIncrement(start, i);
-            plot.push([date, timeSeries[i]]);
-        }
-
-        $.plot(chart, [{
-            label: title,
-            data: plot
-        }], {
-            legend: {
-                show: false
-            },
-            yaxis: {
-                labelWidth,
-                min,
-                tickDecimals: 0,
-                tickFormatter
-            },
-            xaxis: {
-                mode: 'time',
-                timeformat: timeFormat
-            }
-        });
-    }
-
-    renderBarChart(start, min, timeIncrement, timeFormat, labelWidth, timeSeries, chart, title) {
-        const len = timeSeries.length;
-
-        const plot = [];
-        let prevTotal = 0;
-        for (let i = 0; i < len; i++) {
-            const date = timeIncrement(start, i);
-            const today = timeSeries[i] - prevTotal;
-            plot.push([date, today]);
-            prevTotal = timeSeries[i];
-        }
-
-        $.plot(chart, [{
-            label: title,
-            data: plot,
-            bars: {
-                show: true,
-                fill: true,
-            }
-        }], {
-            legend: {
-                show: false
-            },
-            bars: {
-                barWidth: 24 * 60 * 60 * 600,
-            },
-            yaxis: {
-                labelWidth,
-                min,
-                tickDecimals: 0,
-                tickFormatter
-            },
-            xaxis: {
-                mode: 'time',
-                timeformat: timeFormat
-            }
-        });
-    }
-}
-
-function addDays(date, days) {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-}
-
-function addYears(date, years) {
-    const result = new Date(date);
-    result.setFullYear(result.getFullYear() + years);
-    return result;
-}
-
-function tickFormatter(n) {
-    return Math.floor(n).toString().replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
 }
 
 const styles = {
