@@ -89,9 +89,8 @@ export function* showEntityAsync(entity, cesiumElement) {
 // Charts
 // -----------------------------------------------------------------------------
 
-export function renderChart(min, plot, timeFormat, labelWidth, timeSeries, chart, title) {
+export function renderChart(min, plot, timeFormat, labelWidth, timeSeries, chart) {
     $.plot(chart, [{
-        label: title,
         data: plot
     }], {
         legend: {
@@ -110,9 +109,8 @@ export function renderChart(min, plot, timeFormat, labelWidth, timeSeries, chart
     });
 }
 
-export function renderBarChart(min, plot, timeFormat, labelWidth, timeSeries, chart, title) {
+export function renderBarChart(min, plot, timeFormat, labelWidth, timeSeries, chart) {
     $.plot(chart, [{
-        label: title,
         data: plot,
         bars: {
             show: true,
@@ -171,6 +169,20 @@ export function getPlotFromTimestampedSeries(timeSeries) {
     for (let i = 0; i < timeSeries.length; i++) {
         const entry = timeSeries[i];
         plot.push([new Date(entry.date), entry.count]);
+    }
+
+    return plot;
+}
+
+export function getBarPlotFromTimestampedSeries(timeSeries) {
+    const plot = [];
+
+    let prevTotal = 0;
+    for (let i = 0; i < timeSeries.length; i++) {
+        const entry = timeSeries[i];
+        const today = entry.count - prevTotal;
+        plot.push([new Date(entry.date), today]);
+        prevTotal = entry.count;
     }
 
     return plot;

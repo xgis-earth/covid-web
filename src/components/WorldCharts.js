@@ -20,6 +20,7 @@ import Constants from "../constants";
 class WorldCharts extends React.Component {
 
     casesChartRef = React.createRef();
+    dailyCasesChartRef = React.createRef();
     deathsChartRef = React.createRef();
     dailyDeathsChartRef = React.createRef();
     recoveredChartRef = React.createRef();
@@ -42,6 +43,16 @@ class WorldCharts extends React.Component {
                         </div>
                         <div className="card-body">
                             <div ref={this.casesChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Cases (daily totals)
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.dailyCasesChartRef}
                                  className="timeline-chart"
                                  style={styles.chart}/>
                         </div>
@@ -128,8 +139,10 @@ class WorldCharts extends React.Component {
         const start = new Date('2020-01-22');
         const timeFormat = '%d %b';
         const labelWidth = Constants.chartsYLabelWidth;
+        const casesTimeSeries = JSON.parse(data['covid_confirmed_time_series'])
         const deathsTimeSeries = JSON.parse(data['covid_deaths_time_series'])
-        this.renderConfirmedChart(JSON.parse(data['covid_confirmed_time_series']), start, timeFormat, labelWidth);
+        this.renderConfirmedChart(casesTimeSeries, start, timeFormat, labelWidth);
+        this.renderDailyConfirmedChart(casesTimeSeries, start, timeFormat, labelWidth);
         this.renderDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
         this.renderDailyDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
         this.renderRecoveredChart(JSON.parse(data['covid_recovered_time_series']), start, timeFormat, labelWidth);
@@ -139,31 +152,37 @@ class WorldCharts extends React.Component {
     renderConfirmedChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.casesChartRef.current);
         const plot = getPlot(start, timeSeries, addDays);
-        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Cases');
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+    }
+
+    renderDailyConfirmedChart(timeSeries, start, timeFormat, labelWidth) {
+        const chart = $(this.dailyCasesChartRef.current);
+        const plot = getBarPlot(start, timeSeries, addDays);
+        renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
     }
 
     renderDeathsChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.deathsChartRef.current);
         const plot = getPlot(start, timeSeries, addDays);
-        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Deaths');
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
     }
 
     renderDailyDeathsChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.dailyDeathsChartRef.current);
         const plot = getBarPlot(start, timeSeries, addDays);
-        renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Daily Death Totals');
+        renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
     }
 
     renderRecoveredChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.recoveredChartRef.current);
         const plot = getPlot(start, timeSeries, addDays);
-        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, 'Recovered');
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
     }
 
     renderPopulationChart(timeSeries, start, timeFormat, labelWidth) {
         const chart = $(this.populationChartRef.current);
         const plot = getPlot(start, timeSeries, addYears);
-        renderChart(undefined, plot, timeFormat, labelWidth, timeSeries, chart, 'Population');
+        renderChart(undefined, plot, timeFormat, labelWidth, timeSeries, chart);
     }
 }
 
