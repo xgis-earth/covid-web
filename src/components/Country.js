@@ -105,14 +105,6 @@ class Country extends React.Component {
                             Travel
                         </Link>
                     </li>
-{/*
-                    <li className="nav-item">
-                        <Link to={`/country/${this.props.countryCode}/government-measures`}
-                              className={getClasses('government-measures')}>
-                            Government Measures
-                        </Link>
-                    </li>
-*/}
                 </ul>
                 <Switch>
                     <Route exact path="/country/:code" render={({match}) =>
