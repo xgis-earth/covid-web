@@ -39,17 +39,7 @@ class WorldCharts extends React.Component {
                 <div style={{display: this.state.fetching ? 'none' : ''}}>
                     <div className="card" style={{marginTop: "1rem"}}>
                         <div className="card-header">
-                            Cases
-                        </div>
-                        <div className="card-body">
-                            <div ref={this.casesChartRef}
-                                 className="timeline-chart"
-                                 style={styles.chart}/>
-                        </div>
-                    </div>
-                    <div className="card" style={{marginTop: "1rem"}}>
-                        <div className="card-header">
-                            Cases (daily totals)
+                            Cases - Daily Totals
                         </div>
                         <div className="card-body">
                             <div ref={this.dailyCasesChartRef}
@@ -59,17 +49,7 @@ class WorldCharts extends React.Component {
                     </div>
                     <div className="card" style={{marginTop: "1rem"}}>
                         <div className="card-header">
-                            Deaths
-                        </div>
-                        <div className="card-body">
-                            <div ref={this.deathsChartRef}
-                                 className="timeline-chart"
-                                 style={styles.chart}/>
-                        </div>
-                    </div>
-                    <div className="card" style={{marginTop: "1rem"}}>
-                        <div className="card-header">
-                            Deaths (daily totals)
+                            Deaths - Daily Totals
                         </div>
                         <div className="card-body">
                             <div ref={this.dailyDeathsChartRef}
@@ -79,7 +59,27 @@ class WorldCharts extends React.Component {
                     </div>
                     <div className="card" style={{marginTop: "1rem"}}>
                         <div className="card-header">
-                            Recovered
+                            Total Cases
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.casesChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Total Deaths
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.deathsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Total Recovered
                         </div>
                         <div className="card-body">
                             <div ref={this.recoveredChartRef}
