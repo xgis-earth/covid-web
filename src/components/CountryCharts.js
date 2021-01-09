@@ -35,6 +35,7 @@ class CountryCharts extends React.Component {
     testsChartRef = React.createRef();
     dailyTestsChartRef = React.createRef();
     vaccinationsChartRef = React.createRef();
+    dailyVaccinationsChartRef = React.createRef();
     hospitalisationsChartRef = React.createRef();
     populationChartRef = React.createRef();
 
@@ -80,6 +81,16 @@ class CountryCharts extends React.Component {
                             </div>
                             <div className="card-body">
                                 <div ref={this.vaccinationsChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
+                            </div>
+                        </div>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Vaccinations (daily totals)
+                            </div>
+                            <div className="card-body">
+                                <div ref={this.dailyVaccinationsChartRef}
                                      className="timeline-chart"
                                      style={styles.chart}/>
                             </div>
@@ -263,19 +274,20 @@ class CountryCharts extends React.Component {
         const recoveredTimeSeries = JSON.parse(data['covid_recovered_time_series'])
         const populationTimeSeries = JSON.parse(data['population_time_series'])
 
-        this.renderConfirmedChart(confirmedTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderTotalConfirmedCasesChart(confirmedTimeSeries, startDate, endDate, timeFormat, labelWidth);
         this.renderDailyConfirmedChart(confirmedTimeSeries, startDate, endDate, timeFormat, labelWidth);
-        this.renderDeathsChart(deathsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderTotalDeathsChart(deathsTimeSeries, startDate, endDate, timeFormat, labelWidth);
         this.renderDailyDeathsChart(deathsTimeSeries, startDate, endDate, timeFormat, labelWidth);
-        this.renderVaccinationsChart(vaccinationsTimeSeries, startDate, endDate, timeFormat, labelWidth);
-        this.renderHospitalisationsChart(hospitalisationsTimeSeries, startDate, endDate, timeFormat, labelWidth);
-        this.renderRecoveredChart(recoveredTimeSeries, startDate, endDate, timeFormat, labelWidth);
-        this.renderTestsChart(testsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderTotalVaccinationsChart(vaccinationsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderDailyVaccinationsChart(vaccinationsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderDailyHospitalisationsChart(hospitalisationsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderTotalRecoveredChart(recoveredTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderTotalTestsChart(testsTimeSeries, startDate, endDate, timeFormat, labelWidth);
         this.renderDailyTestsChart(testsTimeSeries, startDate, endDate, timeFormat, labelWidth);
         this.renderPopulationChart(populationTimeSeries, new Date('1960'), endDate, '%Y', labelWidth);
     }
 
-    renderConfirmedChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
+    renderTotalConfirmedCasesChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.casesChartRef.current) {
             const chart = $(this.casesChartRef.current);
             const plot = getPlot(startDate, timeSeries, addDays);
@@ -291,7 +303,7 @@ class CountryCharts extends React.Component {
         }
     }
 
-    renderDeathsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
+    renderTotalDeathsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.deathsChartRef.current) {
             const chart = $(this.deathsChartRef.current);
             const plot = getPlot(startDate, timeSeries, addDays);
@@ -307,7 +319,7 @@ class CountryCharts extends React.Component {
         }
     }
 
-    renderVaccinationsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
+    renderTotalVaccinationsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.vaccinationsChartRef.current) {
             const chart = $(this.vaccinationsChartRef.current);
             const plot = getPlotFromTimestampedSeries(timeSeries);
@@ -315,7 +327,15 @@ class CountryCharts extends React.Component {
         }
     }
 
-    renderHospitalisationsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
+    renderDailyVaccinationsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
+        if (this.dailyVaccinationsChartRef.current) {
+            const chart = $(this.dailyVaccinationsChartRef.current);
+            const plot = getBarPlotFromTimestampedSeries(timeSeries);
+            renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
+        }
+    }
+
+    renderDailyHospitalisationsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.hospitalisationsChartRef.current) {
             const chart = $(this.hospitalisationsChartRef.current);
             const plot = getPlotFromTimestampedSeries(timeSeries);
@@ -323,7 +343,7 @@ class CountryCharts extends React.Component {
         }
     }
 
-    renderRecoveredChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
+    renderTotalRecoveredChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.recoveredChartRef.current) {
             const chart = $(this.recoveredChartRef.current);
             const plot = getPlot(startDate, timeSeries, addDays);
@@ -331,7 +351,7 @@ class CountryCharts extends React.Component {
         }
     }
 
-    renderTestsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
+    renderTotalTestsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.testsChartRef.current) {
             const chart = $(this.testsChartRef.current);
             const plot = getPlotFromTimestampedSeries(timeSeries);
