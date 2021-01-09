@@ -57,6 +57,17 @@ class DataSources extends React.Component {
                         </a>
                     </div>
                 </div>
+                <div className="card mt-3">
+                    <div className="card-body">
+                        <h5 className="card-title">Data on COVID-19 (coronavirus) by Our World in Data</h5>
+                        <p className="card-text">
+                            Collection of COVID-19 data maintained by Our World in Data, updated daily.
+                        </p>
+                        <a href="https://ourworldindata.org/coronavirus" className="btn btn-primary">
+                            Go to Our World in Data: Coronavirus Pandemic (COVID-19)
+                        </a>
+                    </div>
+                </div>
             </div>
         )
     }
