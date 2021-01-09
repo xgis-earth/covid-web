@@ -74,128 +74,124 @@ class CountryCharts extends React.Component {
                 }
                 <div style={{display: this.state.fetching ? 'none' : ''}}>
                     {vaccinations > 0 &&
-                    <React.Fragment>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Vaccinations
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.vaccinationsChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Vaccinations - Daily Totals
                         </div>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Vaccinations (daily totals)
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.dailyVaccinationsChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                        <div className="card-body">
+                            <div ref={this.dailyVaccinationsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
                         </div>
-                    </React.Fragment>
+                    </div>
                     }
                     {hospitalisations > 0 &&
-                    <React.Fragment>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Hospitalisations (daily totals)
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.hospitalisationsChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Hospitalisations - Daily Totals
                         </div>
-                    </React.Fragment>
+                        <div className="card-body">
+                            <div ref={this.hospitalisationsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
                     }
                     {deaths > 0 &&
-                    <React.Fragment>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Deaths
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.deathsChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Deaths - Daily Totals
                         </div>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Deaths (daily totals)
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.dailyDeathsChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                        <div className="card-body">
+                            <div ref={this.dailyDeathsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
                         </div>
-                    </React.Fragment>
+                    </div>
                     }
                     {cases > 0 &&
-                    <React.Fragment>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Cases
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.casesChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Cases - Daily Totals
                         </div>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Cases (daily totals)
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.dailyCasesChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                        <div className="card-body">
+                            <div ref={this.dailyCasesChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
                         </div>
-                    </React.Fragment>
-                    }
-                    {recovered > 0 &&
-                    <React.Fragment>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Recovered
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.recoveredChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
-                        </div>
-                    </React.Fragment>
+                    </div>
                     }
                     {tests > 0 &&
-                    <React.Fragment>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Tests
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.testsChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Tests - Daily Totals
                         </div>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Tests (daily totals)
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.dailyTestsChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                        <div className="card-body">
+                            <div ref={this.dailyTestsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
                         </div>
-                    </React.Fragment>
+                    </div>
+                    }
+                    {vaccinations > 0 &&
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Total Vaccinations
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.vaccinationsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
+                    }
+                    {deaths > 0 &&
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Total Deaths
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.deathsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
+                    }
+                    {cases > 0 &&
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Total Cases
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.casesChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
+                    }
+                    {recovered > 0 &&
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Total Recovered
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.recoveredChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
+                    }
+                    {tests > 0 &&
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Total Tests
+                        </div>
+                        <div className="card-body">
+                            <div ref={this.testsChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
                     }
                     {population > 0 &&
                     <React.Fragment>
