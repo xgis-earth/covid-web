@@ -89,16 +89,14 @@ export function* showEntityAsync(entity, cesiumElement) {
 // Charts
 // -----------------------------------------------------------------------------
 
-export function renderChart(min, plot, timeFormat, labelWidth, timeSeries, chart) {
-    $.plot(chart, [{
-        data: plot
-    }], {
+export function renderChart(yMin, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate) {
+    const config = {
         legend: {
             show: false
         },
         yaxis: {
             labelWidth,
-            min,
+            min: yMin,
             tickDecimals: 0,
             tickFormatter
         },
@@ -106,17 +104,16 @@ export function renderChart(min, plot, timeFormat, labelWidth, timeSeries, chart
             mode: 'time',
             timeformat: timeFormat
         }
-    });
+    };
+
+    if (startDate) config.xaxis.min = startDate;
+    if (endDate) config.xaxis.max = endDate;
+
+    $.plot(chart, [{data: plot}], config);
 }
 
-export function renderBarChart(min, plot, timeFormat, labelWidth, timeSeries, chart) {
-    $.plot(chart, [{
-        data: plot,
-        bars: {
-            show: true,
-            fill: true,
-        }
-    }], {
+export function renderBarChart(yMin, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate) {
+    const config = {
         legend: {
             show: false
         },
@@ -125,7 +122,7 @@ export function renderBarChart(min, plot, timeFormat, labelWidth, timeSeries, ch
         },
         yaxis: {
             labelWidth,
-            min,
+            min: yMin,
             tickDecimals: 0,
             tickFormatter
         },
@@ -133,7 +130,18 @@ export function renderBarChart(min, plot, timeFormat, labelWidth, timeSeries, ch
             mode: 'time',
             timeformat: timeFormat
         }
-    });
+    };
+
+    if (startDate) config.xaxis.min = startDate;
+    if (endDate) config.xaxis.max = endDate;
+
+    $.plot(chart, [{
+        data: plot,
+        bars: {
+            show: true,
+            fill: true,
+        }
+    }], config);
 }
 
 export function getPlot(start, timeSeries, timeIncrement) {

@@ -18,6 +18,8 @@ class CountrySummary extends React.Component {
         const deaths = data && data['covid_deaths'];
         const recovered = data && data['covid_recovered'];
         const tests = data && data['covid_tests'];
+        const vaccinations = data && data['covid_vaccinations'];
+        const hospitalisations = data && data['covid_hospitalisations'];
 
         const rows = [];
 
@@ -34,10 +36,11 @@ class CountrySummary extends React.Component {
 
         addRow('Formal Name', properties['Formal']);
         addRow('Population', properties['Population'].toLocaleString());
-        cases && addRow('Covid Cases', cases.toLocaleString());
         deaths && addRow('Covid Deaths', deaths.toLocaleString());
-        recovered && addRow('Covid Recovered', recovered.toLocaleString());
+        cases && addRow('Covid Cases', cases.toLocaleString());
         tests && addRow('Covid Tests', tests.toLocaleString());
+        vaccinations && addRow('Covid Vaccinations', vaccinations.toLocaleString());
+        recovered && addRow('Covid Recovered', recovered.toLocaleString());
 
         return (
             <table className="table">
@@ -51,7 +54,7 @@ class CountrySummary extends React.Component {
 
 const styles = {
     th: {
-        width: "160px",
+        width: "200px",
     },
     thNoTop: {
         width: "160px",

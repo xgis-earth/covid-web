@@ -34,6 +34,8 @@ class CountryCharts extends React.Component {
     recoveredChartRef = React.createRef();
     testsChartRef = React.createRef();
     dailyTestsChartRef = React.createRef();
+    vaccinationsChartRef = React.createRef();
+    hospitalisationsChartRef = React.createRef();
     populationChartRef = React.createRef();
 
     state = {
@@ -52,12 +54,16 @@ class CountryCharts extends React.Component {
         let deaths = parseInt(country.additionalData['covid_deaths']);
         let recovered = parseInt(country.additionalData['covid_recovered']);
         let tests = parseInt(country.additionalData['covid_tests']);
+        let vaccinations = parseInt(country.additionalData['covid_vaccinations']);
+        let hospitalisations = parseInt(country.additionalData['covid_hospitalisations']);
         let population = parseInt(country.additionalData['population']);
 
         cases = isNaN(cases) ? 0 : cases;
         deaths = isNaN(deaths) ? 0 : deaths;
         recovered = isNaN(recovered) ? 0 : recovered;
         tests = isNaN(tests) ? 0 : tests;
+        vaccinations = isNaN(vaccinations) ? 0 : vaccinations;
+        hospitalisations = isNaN(hospitalisations) ? 0 : hospitalisations;
         population = isNaN(population) ? 0 : population;
 
         return (
@@ -66,29 +72,33 @@ class CountryCharts extends React.Component {
                 <Spinner/>
                 }
                 <div style={{display: this.state.fetching ? 'none' : ''}}>
-                    {cases > 0 &&
-                        <React.Fragment>
-                            <div className="card" style={{marginTop: "1rem"}}>
-                                <div className="card-header">
-                                    Cases
-                                </div>
-                                <div className="card-body">
-                                    <div ref={this.casesChartRef}
-                                         className="timeline-chart"
-                                         style={styles.chart}/>
-                                </div>
+                    {vaccinations > 0 &&
+                    <React.Fragment>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Vaccinations
                             </div>
-                            <div className="card" style={{marginTop: "1rem"}}>
-                                <div className="card-header">
-                                    Cases (daily totals)
-                                </div>
-                                <div className="card-body">
-                                    <div ref={this.dailyCasesChartRef}
-                                         className="timeline-chart"
-                                         style={styles.chart}/>
-                                </div>
+                            <div className="card-body">
+                                <div ref={this.vaccinationsChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
                             </div>
-                        </React.Fragment>
+                        </div>
+                    </React.Fragment>
+                    }
+                    {hospitalisations > 0 &&
+                    <React.Fragment>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Hospitalisations (daily totals)
+                            </div>
+                            <div className="card-body">
+                                <div ref={this.hospitalisationsChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
+                            </div>
+                        </div>
+                    </React.Fragment>
                     }
                     {deaths > 0 &&
                     <React.Fragment>
@@ -114,53 +124,81 @@ class CountryCharts extends React.Component {
                         </div>
                     </React.Fragment>
                     }
+                    {cases > 0 &&
+                    <React.Fragment>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Cases
+                            </div>
+                            <div className="card-body">
+                                <div ref={this.casesChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
+                            </div>
+                        </div>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Cases (daily totals)
+                            </div>
+                            <div className="card-body">
+                                <div ref={this.dailyCasesChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
+                            </div>
+                        </div>
+                    </React.Fragment>
+                    }
                     {recovered > 0 &&
-                    <div className="card" style={{marginTop: "1rem"}}>
-                        <div className="card-header">
-                            Recovered
+                    <React.Fragment>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Recovered
+                            </div>
+                            <div className="card-body">
+                                <div ref={this.recoveredChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
+                            </div>
                         </div>
-                        <div className="card-body">
-                            <div ref={this.recoveredChartRef}
-                                 className="timeline-chart"
-                                 style={styles.chart}/>
-                        </div>
-                    </div>
+                    </React.Fragment>
                     }
                     {tests > 0 &&
-                        <React.Fragment>
-                            <div className="card" style={{marginTop: "1rem"}}>
-                                <div className="card-header">
-                                    Tests
-                                </div>
-                                <div className="card-body">
-                                    <div ref={this.testsChartRef}
-                                         className="timeline-chart"
-                                         style={styles.chart}/>
-                                </div>
+                    <React.Fragment>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Tests
                             </div>
-                            <div className="card" style={{marginTop: "1rem"}}>
-                                <div className="card-header">
-                                    Tests (daily totals)
-                                </div>
-                                <div className="card-body">
-                                    <div ref={this.dailyTestsChartRef}
-                                         className="timeline-chart"
-                                         style={styles.chart}/>
-                                </div>
+                            <div className="card-body">
+                                <div ref={this.testsChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
                             </div>
-                        </React.Fragment>
+                        </div>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Tests (daily totals)
+                            </div>
+                            <div className="card-body">
+                                <div ref={this.dailyTestsChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
+                            </div>
+                        </div>
+                    </React.Fragment>
                     }
                     {population > 0 &&
-                    <div className="card" style={{marginTop: "1rem"}}>
-                        <div className="card-header">
-                            Population
+                    <React.Fragment>
+                        <div className="card" style={{marginTop: "1rem"}}>
+                            <div className="card-header">
+                                Population
+                            </div>
+                            <div className="card-body">
+                                <div ref={this.populationChartRef}
+                                     className="timeline-chart"
+                                     style={styles.chart}/>
+                            </div>
                         </div>
-                        <div className="card-body">
-                            <div ref={this.populationChartRef}
-                                 className="timeline-chart"
-                                 style={styles.chart}/>
-                        </div>
-                    </div>
+                    </React.Fragment>
                     }
                 </div>
             </React.Fragment>
@@ -188,6 +226,8 @@ class CountryCharts extends React.Component {
                     covid_deaths_time_series
                     covid_recovered_time_series
                     covid_tests_time_series
+                    covid_vaccinations_time_series
+                    covid_hospitalisations_time_series
                 }
             }
         `;
@@ -210,82 +250,107 @@ class CountryCharts extends React.Component {
     }
 
     renderCharts(data) {
-        const start = new Date('2020-01-22');
+        const startDate = new Date('2020-01-22');
+        const endDate = new Date();
         const timeFormat = '%d %b';
         const labelWidth = Constants.chartsYLabelWidth;
+
         const confirmedTimeSeries = JSON.parse(data['covid_confirmed_time_series'])
         const deathsTimeSeries = JSON.parse(data['covid_deaths_time_series'])
         const testsTimeSeries = JSON.parse(data['covid_tests_time_series'])
-        this.renderConfirmedChart(confirmedTimeSeries, start, timeFormat, labelWidth);
-        this.renderDailyConfirmedChart(confirmedTimeSeries, start, timeFormat, labelWidth);
-        this.renderDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
-        this.renderDailyDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
-        this.renderRecoveredChart(JSON.parse(data['covid_recovered_time_series']), start, timeFormat, labelWidth);
-        this.renderTestsChart(testsTimeSeries, timeFormat, labelWidth);
-        this.renderDailyTestsChart(testsTimeSeries, start, timeFormat, labelWidth);
-        this.renderPopulationChart(JSON.parse(data['population_time_series']), new Date('1960'), '%Y', labelWidth);
+        const vaccinationsTimeSeries = JSON.parse(data['covid_vaccinations_time_series'])
+        const hospitalisationsTimeSeries = JSON.parse(data['covid_hospitalisations_time_series'])
+        const recoveredTimeSeries = JSON.parse(data['covid_recovered_time_series'])
+        const populationTimeSeries = JSON.parse(data['population_time_series'])
+
+        this.renderConfirmedChart(confirmedTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderDailyConfirmedChart(confirmedTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderDeathsChart(deathsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderDailyDeathsChart(deathsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderVaccinationsChart(vaccinationsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderHospitalisationsChart(hospitalisationsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderRecoveredChart(recoveredTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderTestsChart(testsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderDailyTestsChart(testsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderPopulationChart(populationTimeSeries, new Date('1960'), endDate, '%Y', labelWidth);
     }
 
-    renderConfirmedChart(timeSeries, start, timeFormat, labelWidth) {
+    renderConfirmedChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.casesChartRef.current) {
             const chart = $(this.casesChartRef.current);
-            const plot = getPlot(start, timeSeries, addDays);
-            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+            const plot = getPlot(startDate, timeSeries, addDays);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
         }
     }
 
-    renderDailyConfirmedChart(timeSeries, start, timeFormat, labelWidth) {
+    renderDailyConfirmedChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.dailyCasesChartRef.current) {
             const chart = $(this.dailyCasesChartRef.current);
-            const plot = getBarPlot(start, timeSeries, addDays);
-            renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+            const plot = getBarPlot(startDate, timeSeries, addDays);
+            renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
         }
     }
 
-    renderDeathsChart(timeSeries, start, timeFormat, labelWidth) {
+    renderDeathsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.deathsChartRef.current) {
             const chart = $(this.deathsChartRef.current);
-            const plot = getPlot(start, timeSeries, addDays);
-            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+            const plot = getPlot(startDate, timeSeries, addDays);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
         }
     }
 
-    renderDailyDeathsChart(timeSeries, start, timeFormat, labelWidth) {
+    renderDailyDeathsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.dailyDeathsChartRef.current) {
             const chart = $(this.dailyDeathsChartRef.current);
-            const plot = getBarPlot(start, timeSeries, addDays);
-            renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+            const plot = getBarPlot(startDate, timeSeries, addDays);
+            renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
         }
     }
 
-    renderRecoveredChart(timeSeries, start, timeFormat, labelWidth) {
+    renderVaccinationsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
+        if (this.vaccinationsChartRef.current) {
+            const chart = $(this.vaccinationsChartRef.current);
+            const plot = getPlotFromTimestampedSeries(timeSeries);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
+        }
+    }
+
+    renderHospitalisationsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
+        if (this.hospitalisationsChartRef.current) {
+            const chart = $(this.hospitalisationsChartRef.current);
+            const plot = getPlotFromTimestampedSeries(timeSeries);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
+        }
+    }
+
+    renderRecoveredChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.recoveredChartRef.current) {
             const chart = $(this.recoveredChartRef.current);
-            const plot = getPlot(start, timeSeries, addDays);
-            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+            const plot = getPlot(startDate, timeSeries, addDays);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
         }
     }
 
-    renderTestsChart(timeSeries, timeFormat, labelWidth) {
+    renderTestsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.testsChartRef.current) {
             const chart = $(this.testsChartRef.current);
             const plot = getPlotFromTimestampedSeries(timeSeries);
-            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
         }
     }
 
-    renderDailyTestsChart(timeSeries, start, timeFormat, labelWidth) {
+    renderDailyTestsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.dailyTestsChartRef.current) {
             const chart = $(this.dailyTestsChartRef.current);
             const plot = getBarPlotFromTimestampedSeries(timeSeries);
-            renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+            renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
         }
     }
 
-    renderPopulationChart(timeSeries, start, timeFormat, labelWidth) {
+    renderPopulationChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         if (this.populationChartRef.current) {
             const chart = $(this.populationChartRef.current);
-            const plot = getPlot(start, timeSeries, addYears);
+            const plot = getPlot(startDate, timeSeries, addYears);
             renderChart(undefined, plot, timeFormat, labelWidth, timeSeries, chart);
         }
     }

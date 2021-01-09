@@ -21,8 +21,9 @@ class WorldCountries extends React.Component {
                 const name = country.additionalData.name;
                 const deaths = country.additionalData['covid_deaths'] || 0;
                 const cases = country.additionalData['covid_confirmed'] || 0;
+                const vaccinations = country.additionalData['covid_vaccinations'] || 0;
                 if (deaths === 0 && cases === 0) continue; // Don't show rows with no data.
-                tableData.push({code, name, deaths, cases});
+                tableData.push({code, name, deaths, cases, vaccinations});
             }
         }
 
@@ -42,6 +43,12 @@ class WorldCountries extends React.Component {
             {
                 dataField: 'deaths',
                 text: 'Deaths',
+                sort: true,
+                formatter: (cell) => cell ? cell.toLocaleString() : ''
+            },
+            {
+                dataField: 'vaccinations',
+                text: 'Vaccinations',
                 sort: true,
                 formatter: (cell) => cell ? cell.toLocaleString() : ''
             }

@@ -63,6 +63,8 @@ function* handleGetGlobeData(action) {
                 covid_deaths
                 covid_recovered
                 covid_tests
+                covid_vaccinations
+                covid_hospitalisations
             }
         }`;
 
