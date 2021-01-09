@@ -1,6 +1,6 @@
-/**/*.swp
-/**/.graphqlconfig
-/**/.idea/
-/**/graphql_schema.json
-/**/node_modules/
-/**/wwwroot/dist/
+*.swp
+/.graphqlconfig
+/.idea/
+/graphql_schema.json
+/node_modules/
+/wwwroot/dist/
