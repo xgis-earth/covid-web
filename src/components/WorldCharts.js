@@ -136,53 +136,59 @@ class WorldCharts extends React.Component {
     }
 
     renderCharts(data) {
-        const start = new Date('2020-01-22');
+        const startDate = new Date('2020-01-22');
+        const endDate = new Date();
         const timeFormat = '%d %b';
         const labelWidth = Constants.chartsYLabelWidth;
+
         const casesTimeSeries = JSON.parse(data['covid_confirmed_time_series'])
         const deathsTimeSeries = JSON.parse(data['covid_deaths_time_series'])
-        this.renderConfirmedChart(casesTimeSeries, start, timeFormat, labelWidth);
-        this.renderDailyConfirmedChart(casesTimeSeries, start, timeFormat, labelWidth);
-        this.renderDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
-        this.renderDailyDeathsChart(deathsTimeSeries, start, timeFormat, labelWidth);
-        this.renderRecoveredChart(JSON.parse(data['covid_recovered_time_series']), start, timeFormat, labelWidth);
-        this.renderPopulationChart(JSON.parse(data['population_time_series']), new Date('1960'), '%Y', labelWidth);
+        const recoveredTimeSeries = JSON.parse(data['covid_recovered_time_series'])
+        const populationTimeSeries = JSON.parse(data['population_time_series'])
+
+        this.renderConfirmedChart(casesTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderDailyConfirmedChart(casesTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderDeathsChart(deathsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderDailyDeathsChart(deathsTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderRecoveredChart(recoveredTimeSeries, startDate, endDate, timeFormat, labelWidth);
+        this.renderPopulationChart(populationTimeSeries, new Date('1960'),
+            new Date(endDate.getYear() + 1900, 0), '%Y', labelWidth);
     }
 
-    renderConfirmedChart(timeSeries, start, timeFormat, labelWidth) {
+    renderConfirmedChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         const chart = $(this.casesChartRef.current);
-        const plot = getPlot(start, timeSeries, addDays);
-        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+        const plot = getPlot(startDate, timeSeries, addDays);
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
     }
 
-    renderDailyConfirmedChart(timeSeries, start, timeFormat, labelWidth) {
+    renderDailyConfirmedChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         const chart = $(this.dailyCasesChartRef.current);
-        const plot = getBarPlot(start, timeSeries, addDays);
-        renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+        const plot = getBarPlot(startDate, timeSeries, addDays);
+        renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
     }
 
-    renderDeathsChart(timeSeries, start, timeFormat, labelWidth) {
+    renderDeathsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         const chart = $(this.deathsChartRef.current);
-        const plot = getPlot(start, timeSeries, addDays);
-        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+        const plot = getPlot(startDate, timeSeries, addDays);
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
     }
 
-    renderDailyDeathsChart(timeSeries, start, timeFormat, labelWidth) {
+    renderDailyDeathsChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         const chart = $(this.dailyDeathsChartRef.current);
-        const plot = getBarPlot(start, timeSeries, addDays);
-        renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+        const plot = getBarPlot(startDate, timeSeries, addDays);
+        renderBarChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
     }
 
-    renderRecoveredChart(timeSeries, start, timeFormat, labelWidth) {
+    renderRecoveredChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         const chart = $(this.recoveredChartRef.current);
-        const plot = getPlot(start, timeSeries, addDays);
-        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart);
+        const plot = getPlot(startDate, timeSeries, addDays);
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, startDate, endDate);
     }
 
-    renderPopulationChart(timeSeries, start, timeFormat, labelWidth) {
+    renderPopulationChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
         const chart = $(this.populationChartRef.current);
-        const plot = getPlot(start, timeSeries, addYears);
-        renderChart(undefined, plot, timeFormat, labelWidth, timeSeries, chart);
+        const plot = getPlot(startDate, timeSeries, addYears);
+        renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, undefined, endDate);
     }
 }
 
