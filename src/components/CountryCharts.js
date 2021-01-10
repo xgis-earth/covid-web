@@ -194,18 +194,16 @@ class CountryCharts extends React.Component {
                     </div>
                     }
                     {population > 0 &&
-                    <React.Fragment>
-                        <div className="card" style={{marginTop: "1rem"}}>
-                            <div className="card-header">
-                                Population
-                            </div>
-                            <div className="card-body">
-                                <div ref={this.populationChartRef}
-                                     className="timeline-chart"
-                                     style={styles.chart}/>
-                            </div>
+                    <div className="card" style={{marginTop: "1rem"}}>
+                        <div className="card-header">
+                            Population
                         </div>
-                    </React.Fragment>
+                        <div className="card-body">
+                            <div ref={this.populationChartRef}
+                                 className="timeline-chart"
+                                 style={styles.chart}/>
+                        </div>
+                    </div>
                     }
                 </div>
             </React.Fragment>
