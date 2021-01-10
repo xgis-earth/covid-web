@@ -278,7 +278,8 @@ class CountryCharts extends React.Component {
         this.renderTotalRecoveredChart(recoveredTimeSeries, startDate, endDate, timeFormat, labelWidth);
         this.renderTotalTestsChart(testsTimeSeries, startDate, endDate, timeFormat, labelWidth);
         this.renderDailyTestsChart(testsTimeSeries, startDate, endDate, timeFormat, labelWidth);
-        this.renderPopulationChart(populationTimeSeries, new Date('1960'), endDate, '%Y', labelWidth);
+        this.renderPopulationChart(populationTimeSeries, new Date('1960'),
+            new Date(endDate.getYear() + 1900, 0), '%Y', labelWidth);
     }
 
     renderTotalConfirmedCasesChart(timeSeries, startDate, endDate, timeFormat, labelWidth) {
@@ -365,8 +366,6 @@ class CountryCharts extends React.Component {
         if (this.populationChartRef.current) {
             const chart = $(this.populationChartRef.current);
             const plot = getPlot(startDate, timeSeries, addYears);
-            const year = new Date().getYear() + 1900;
-            const endDate = new Date(year, 0);
             renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, undefined, endDate);
         }
     }
