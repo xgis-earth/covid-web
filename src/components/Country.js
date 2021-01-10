@@ -26,11 +26,6 @@ class Country extends React.Component {
             return <NotFound/>
         }
 
-        if (!this.props.initialEntity) {
-            const entity = getCountryEntity(this.props.countryCode, this.props.countryEntities);
-            this.props.onSetInitialEntity(entity);
-        }
-
         const countryName = country.properties['Country Name'];
 
         // Get selected tab name.
@@ -125,6 +120,14 @@ class Country extends React.Component {
                 </Switch>
             </div>
         )
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.countries && this.props.countryEntities &&
+            this.props.countries[this.props.countryCode] && !this.props.initialEntity) {
+            const entity = getCountryEntity(this.props.countryCode, this.props.countryEntities);
+            this.props.onSetInitialEntity(entity);
+        }
     }
 }
 
