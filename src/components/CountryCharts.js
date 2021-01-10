@@ -367,7 +367,9 @@ class CountryCharts extends React.Component {
         if (this.populationChartRef.current) {
             const chart = $(this.populationChartRef.current);
             const plot = getPlot(startDate, timeSeries, addYears);
-            renderChart(undefined, plot, timeFormat, labelWidth, timeSeries, chart);
+            const year = new Date().getYear() + 1900;
+            const endDate = new Date(year, 0);
+            renderChart(0, plot, timeFormat, labelWidth, timeSeries, chart, undefined, endDate);
         }
     }
 }
