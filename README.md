@@ -1,6 +1,7 @@
 # 2019-nCoV Website
 
-[![Build Status](https://drone.tiepy.com/api/badges/xgis-earth/covid-web/status.svg)](https://drone.tiepy.com/xgis-earth/covid-web)
+[![Build Status](https://drone.tiepy.com/api/badges/xgis-earth/covid-web/status.svg)](
+https://drone.tiepy.com/xgis-earth/covid-web)
 
 ## Development Notes
 
