@@ -71,3 +71,8 @@ body {
     border-width: 1px 0 0 0;
   }
 }
+
+// Mobile header background was transparent. Give it a white background here.
+.fixed-top {
+  background-color: white;
+}
