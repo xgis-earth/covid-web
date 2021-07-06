@@ -14,7 +14,7 @@ steps:
         from_secret: covid_mapbox_token
     settings:
       repo: xgis/covid-web
-      tags: [ "${DRONE_COMMIT_SHA:0:7}", "latest" ]
+      tags: ["latest"]
       username:
         from_secret: docker_username
       password:
